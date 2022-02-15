@@ -5,7 +5,8 @@
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",
-    "lint": "npm run lint:eslint",
+    "lint": "npm run lint:prettier && npm run lint:eslint",
+    "lint:prettier": "prettier -c \"src/**/*.{json,js,ts}\"",
     "lint:eslint": "eslint \"src/**/*.{js,ts,vue}\""
   },
   "devDependencies": {
