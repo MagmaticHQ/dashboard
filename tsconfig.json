@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
-    "target": "ES5",
-    "module": "ESNext",
+    "target": "ES2021",
+    "module": "ES2020",
     "strict": true,
     "jsx": "preserve",
     "baseUrl": "src",
@@ -13,5 +13,5 @@
     "allowSyntheticDefaultImports": true,
     "suppressImplicitAnyIndexErrors": true
   },
-  "include": ["src"]
+  "include": ["src/**/*.ts", "src/**/*.vue", "tests/**/*.ts"]
 }

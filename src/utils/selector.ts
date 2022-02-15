@@ -1,0 +1,97 @@
+import config from './config';
+
+import { MetricRouteParams } from '@/router';
+
+export const ALL = 'all';
+export const OTHERS = '_others';
+
+export interface Selector {
+  id: string;
+  label: string;
+  selected: string;
+  options: SelectorOption[];
+}
+
+interface SelectorOption {
+  value: string;
+  text: string;
+}
+
+export function getSelectors(routeParams: MetricRouteParams): Selector[] {
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
+  const { category, dataset, type } = routeParams;
+  const selectorType = getSelectorType(category, dataset, type);
+  const configSelectors = config.selectors[category][selectorType];
+  const datasetSelectors = Object.keys(configSelectors).map((id) => {
+    const optionList = configSelectors[id];
+    const options = optionList.map((value: string) => {
+      const text = config.names[value];
+      return {
+        value,
+        text,
+      };
+    });
+    return {
+      id,
+      label: getCategoryLabel(id),
+      selected: ALL,
+      options,
+    };
+  });
+  const chainSelector = {
+    id: 'chain',
+    label: 'Network',
+    selected: 'ethereum',
+    options: [
+      { value: 'ethereum', text: 'Ethereum' },
+      { value: 'polygon', text: 'Polygon' },
+    ],
+  };
+  const selectors = [chainSelector, ...datasetSelectors];
+  return selectors;
+}
+
+export function getChain(selectors: Selector[]): string {
+  const chainSelector = selectors.find((selector) => selector.id === 'chain');
+  return chainSelector?.selected || 'ethereum';
+}
+
+export function getGroup(selectors: Selector[]): string {
+  for (const selector of selectors) {
+    if (selector.selected === ALL) {
+      return selector.id;
+    }
+  }
+  return '';
+}
+
+export function getSelectorById(
+  selectors: Selector[],
+  id: string,
+): Selector | undefined {
+  return selectors.find((selector) => selector.id === id);
+}
+
+function getSelectorType(category: string, dataset: string, type: string) {
+  if (category === 'amm') {
+    if (dataset === 'volume') {
+      return type;
+    }
+    if (dataset === 'fees') {
+      return 'pair';
+    }
+    return 'asset';
+  } else {
+    return 'asset';
+  }
+}
+
+function getCategoryLabel(categoryId: string): string {
+  const labelMap: Record<string, string> = {
+    protocols: 'Protocol',
+    assets: 'Asset',
+    pairs: 'Pair',
+  };
+  return labelMap[categoryId];
+}

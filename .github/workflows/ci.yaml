@@ -1,10 +1,8 @@
 name: CI
 
 on:
-  push:
-    branches: [ main ]
   pull_request:
-    branches: [ main ]
+    branches: [ master ]
 
 jobs:
   run:
@@ -22,7 +20,7 @@ jobs:
       run: npm run lint
 
     - name: Type checking
-      run: npx tsc --noEmit && npx vue-tsc --noEmit
+      run: tsc --noEmit
 
     - name: Build
       run: npm run build
