@@ -7,6 +7,8 @@
     "build": "astro build"
   },
   "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^5.12.0",
+    "@typescript-eslint/parser": "^5.12.0",
     "astro": "^0.22.20",
     "eslint": "^8.9.0",
     "eslint-import-resolver-typescript": "^2.5.0",
