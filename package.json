@@ -5,9 +5,10 @@
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",
-    "lint": "npm run lint:prettier && npm run lint:eslint",
+    "lint": "npm run lint:prettier && npm run lint:eslint && npm run lint:stylelint",
     "lint:prettier": "prettier -c \"src/**/*.{json,js,ts}\"",
-    "lint:eslint": "eslint \"src/**/*.{js,ts,vue}\""
+    "lint:eslint": "eslint \"src/**/*.{js,ts,vue}\"",
+    "lint:stylelint": "stylelint \"src/**/*.{css,vue}\""
   },
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^5.12.0",
