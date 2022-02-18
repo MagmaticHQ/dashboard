@@ -27,11 +27,13 @@ import { useRoute } from 'vue-router';
 import Chart from '@/components/Chart.vue';
 import LoadingIndicator from '@/components/LoadingIndicator.vue';
 import { Dataset } from '@/router';
-import { Data, getAmmAssetVolume } from '@/utils/api';
+import { Data, getAmmAssetVolume, getAmmPairVolume, getAmmLiquidity, getAmmFees } from '@/utils/api';
 import { getChartType, getChartData, getChartTimestamps } from '@/utils/chart';
-import { Selector, getAmmAssetVolumeSelectors } from '@/utils/selector';
+import { Selector, getAmmAssetVolumeSelectors, getAmmPairVolumeSelectors, getAmmLiquiditySelectors, getAmmFeeSelectors } from '@/utils/selector';
 
 const route = useRoute();
+
+const protocol = route.params.protocol as string;
 
 const isLoading = ref(true);
 
@@ -47,10 +49,45 @@ interface Input {
 const inputs: Input[] = [{
   dataset: 'volume',
   chains: ['ethereum'],
-  protocols: [route.params.protocol as string],
+  protocols: [protocol],
   assets: ['all'],
   selectorFunc: getAmmAssetVolumeSelectors,
   fetchFunc: getAmmAssetVolume,
+}, {
+  dataset: 'liquidity',
+  chains: ['ethereum'],
+  protocols: [protocol],
+  assets: ['all'],
+  selectorFunc: getAmmLiquiditySelectors,
+  fetchFunc: getAmmLiquidity,
+}, {
+  dataset: 'volume',
+  chains: ['ethereum', 'polygon'],
+  protocols: [protocol],
+  assets: ['all'],
+  selectorFunc: getAmmAssetVolumeSelectors,
+  fetchFunc: getAmmAssetVolume,
+}, {
+  dataset: 'volume',
+  chains: ['ethereum'],
+  protocols: [protocol],
+  assets: ['dai-usdc', 'dai-usdt', 'usdc-usdt', 'eth-seth', 'wbtc-sbtc'],
+  selectorFunc: getAmmPairVolumeSelectors,
+  fetchFunc: getAmmPairVolume,
+}, {
+  dataset: 'fees',
+  chains: ['ethereum'],
+  protocols: [protocol],
+  assets: ['all'],
+  selectorFunc: getAmmFeeSelectors,
+  fetchFunc: getAmmFees,
+}, {
+  dataset: 'liquidity',
+  chains: ['ethereum'],
+  protocols: [protocol],
+  assets: ['dai', 'usdc', 'usdt', 'eth', 'seth', 'wbtc', 'sbtc'],
+  selectorFunc: getAmmLiquiditySelectors,
+  fetchFunc: getAmmLiquidity,
 }];
 
 const data = ref<Data[]>(inputs.map(() => []));

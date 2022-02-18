@@ -1,6 +1,6 @@
 import config from './config';
 
-import { MetricRouteParams } from '@/router';
+import { Dataset, MetricRouteParams } from '@/router';
 
 export const ALL = 'all';
 export const OTHERS = '_others';
@@ -22,8 +22,43 @@ export function getAmmAssetVolumeSelectors(
   protocol: string,
   asset: string,
 ): Selector[] {
-  const selectorType = getSelectorType('amm', 'volume', 'asset');
-  const configSelectors = config.selectors['amm'][selectorType];
+  return getDataSelectors('amm', 'volume', 'asset', chain, protocol, asset);
+}
+
+export function getAmmPairVolumeSelectors(
+  chain: string,
+  protocol: string,
+  pair: string,
+): Selector[] {
+  return getDataSelectors('amm', 'volume', 'pair', chain, protocol, pair);
+}
+
+export function getAmmFeeSelectors(
+  chain: string,
+  protocol: string,
+  asset: string,
+): Selector[] {
+  return getDataSelectors('amm', 'fees', 'pair', chain, protocol, asset);
+}
+
+export function getAmmLiquiditySelectors(
+  chain: string,
+  protocol: string,
+  asset: string,
+): Selector[] {
+  return getDataSelectors('amm', 'liquidity', 'asset', chain, protocol, asset);
+}
+
+function getDataSelectors(
+  category: string,
+  dataset: Dataset,
+  type: string,
+  chain: string,
+  protocol: string,
+  asset: string,
+): Selector[] {
+  const selectorType = getSelectorType(category, dataset, type);
+  const configSelectors = config.selectors.amm[selectorType];
   const datasetSelectors = Object.keys(configSelectors).map((id) => {
     const optionList = configSelectors[id];
     const options = optionList.map((value: string) => {
@@ -108,7 +143,7 @@ export function getSelectorById(
   return selectors.find((selector) => selector.id === id);
 }
 
-function getSelectorType(category: string, dataset: string, type: string) {
+function getSelectorType(category: string, dataset: Dataset, type: string) {
   if (category === 'amm') {
     if (dataset === 'volume') {
       return type;

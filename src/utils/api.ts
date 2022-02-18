@@ -14,7 +14,17 @@ async function getAmmAssetVolume(
   protocols: string[],
   assets: string[],
 ): Promise<Data> {
-  return await fetchData('amm/volume/asset', chains, protocols, assets);
+  const params = getAssetParams(chains, protocols, assets);
+  return await fetchData('amm/volume/asset', params);
+}
+
+async function getAmmPairVolume(
+  chains: string[],
+  protocols: string[],
+  pairs: string[],
+): Promise<Data> {
+  const params = getPairParams(chains, protocols, pairs);
+  return await fetchData('amm/volume/pair', params);
 }
 
 async function getAmmLiquidity(
@@ -22,33 +32,21 @@ async function getAmmLiquidity(
   protocols: string[],
   assets: string[],
 ): Promise<Data> {
-  return await fetchData('amm/liquidity/asset', chains, protocols, assets);
+  const params = getAssetParams(chains, protocols, assets);
+  return await fetchData('amm/liquidity', params);
 }
 
 async function getAmmFees(
   chains: string[],
   protocols: string[],
-  assets: string[],
+  pairs: string[],
 ): Promise<Data> {
-  return await fetchData('amm/fees/pair', chains, protocols, assets);
+  const params = getPairParams(chains, protocols, pairs);
+  return await fetchData('amm/fees/total', params);
 }
 
-async function fetchData(
-  endpoint: string,
-  chains: string[],
-  protocols: string[],
-  assets: string[],
-) {
+async function fetchData(endpoint: string, params: Record<string, string>) {
   const baseUrl = 'https://api.magmatic.xyz/v1';
-  const { start, end } = getTimestampsFromPeriod(getPeriod(30));
-  const params = {
-    chains: chains.join(','),
-    protocols: protocols.join(','),
-    assets: assets.join(','),
-    start: start.toString(),
-    end: end.toString(),
-    resolution: '1d',
-  };
   const url = new URL(`${baseUrl}/${endpoint}`);
   url.search = new URLSearchParams(params).toString();
   const response = await fetch(url.toString(), {
@@ -60,4 +58,35 @@ async function fetchData(
   return data;
 }
 
-export { getAmmAssetVolume, getAmmLiquidity, getAmmFees };
+function getAssetParams(
+  chains: string[],
+  protocols: string[],
+  assets: string[],
+) {
+  const baseParams = getBaseParams(chains, protocols);
+  return {
+    ...baseParams,
+    assets: assets.join(','),
+  };
+}
+
+function getPairParams(chains: string[], protocols: string[], pairs: string[]) {
+  const baseParams = getBaseParams(chains, protocols);
+  return {
+    ...baseParams,
+    pairs: pairs.join(','),
+  };
+}
+
+function getBaseParams(chains: string[], protocols: string[]) {
+  const { start, end } = getTimestampsFromPeriod(getPeriod(30));
+  return {
+    chains: chains.join(','),
+    protocols: protocols.join(','),
+    start: start.toString(),
+    end: end.toString(),
+    resolution: '1d',
+  };
+}
+
+export { getAmmAssetVolume, getAmmPairVolume, getAmmLiquidity, getAmmFees };
