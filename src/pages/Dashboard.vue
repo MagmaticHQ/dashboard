@@ -9,7 +9,7 @@
         v-if="isLoading"
         class="loader"
       />
-      <Chart
+      <ChartDataset
         v-else
         :type="chart.type"
         :is-relative="false"
@@ -24,7 +24,7 @@
 import { ref, computed, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
 
-import Chart from '@/components/Chart.vue';
+import ChartDataset from '@/components/ChartDataset.vue';
 import LoadingIndicator from '@/components/LoadingIndicator.vue';
 import { Dataset } from '@/router';
 import { Data, getAmmAssetVolume, getAmmPairVolume, getAmmLiquidity, getAmmFees } from '@/utils/api';
