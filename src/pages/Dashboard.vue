@@ -1,16 +1,22 @@
 <template>
-  <div class="chart">
-    <LoadingIndicator
-      class="loader"
-      v-if="isLoading"
-    />
-    <Chart
-      v-else
-      :type="chart.type"
-      :is-relative="false"
-      :timestamps="chart.timestamps"
-      :data="chart.data"
-    />
+  <div class="list">
+    <div
+      v-for="(i) in [1,2,3,4,5,6]"
+      :key="i"
+      class="chart"
+    >
+      <LoadingIndicator
+        v-if="isLoading"
+        class="loader"
+      />
+      <Chart
+        v-else
+        :type="chart.type"
+        :is-relative="false"
+        :timestamps="chart.timestamps"
+        :data="chart.data"
+      />
+    </div>
   </div>
 </template>
 
@@ -54,8 +60,17 @@ onMounted(() => {
 </script>
 
 <style scoped>
+.list {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 16px 32px;
+}
+
 .chart {
-  height: 512px;
+  width: 100%;
+  max-width: 580px;
+  height: 300px;
   margin-top: 16px;
   padding: 8px 0;
   border: 1px solid var(--border);
