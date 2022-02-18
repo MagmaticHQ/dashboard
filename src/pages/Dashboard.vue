@@ -1,8 +1,8 @@
 <template>
   <div class="list">
     <div
-      v-for="(i) in [1,2,3,4,5,6]"
-      :key="i"
+      v-for="(chart, index) in charts"
+      :key="index"
       class="chart"
     >
       <LoadingIndicator
@@ -21,36 +21,54 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, computed, onMounted } from 'vue';
+import { ref, computed, onMounted } from 'vue';
 
 import Chart from '@/components/Chart.vue';
 import LoadingIndicator from '@/components/LoadingIndicator.vue';
+import { Dataset } from '@/router';
 import { Data, getAmmAssetVolume } from '@/utils/api';
 import { getChartType, getChartData, getChartTimestamps } from '@/utils/chart';
-import { getAmmAssetVolumeSelectors } from '@/utils/selector';
+import { Selector, getAmmAssetVolumeSelectors } from '@/utils/selector';
 
 const isLoading = ref(true);
 
-const chart = reactive({
-  type: computed(() => getChartType('volume')),
-  timestamps: computed(() =>
-    getChartTimestamps(
-      'volume',
-      state.value,
-      getAmmAssetVolumeSelectors('ethereum', 'all', 'all'),
-    ),
-  ),
-  data: computed(() =>
-    getChartData('volume', state.value, getAmmAssetVolumeSelectors('ethereum', 'all', 'all')),
-  ),
+interface Input {
+  dataset: Dataset;
+  chains: string[];
+  protocols: string[];
+  assets: string[];
+  selectorFunc: (chains: string, protocols: string, assets: string) => Selector[];
+  fetchFunc: (chains: string[], protocols: string[], assets: string[]) => Promise<Data>;
+}
+
+const inputs: Input[] = [{
+  dataset: 'volume',
+  chains: ['ethereum'],
+  protocols: ['all'],
+  assets: ['all'],
+  selectorFunc: getAmmAssetVolumeSelectors,
+  fetchFunc: getAmmAssetVolume,
+}];
+
+const data = ref<Data[]>(inputs.map(() => []));
+
+const charts = computed(() => {
+  return data.value.map((row, index) => {
+    const input = inputs[index];
+    return {
+      type: getChartType(input.dataset),
+      timestamps: getChartTimestamps(input.dataset, row, input.selectorFunc(input.chains[0], input.protocols[0], input.assets[0])),
+      data: getChartData(input.dataset, row, input.selectorFunc(input[0], input[1], input[2])),
+    };
+  });
 });
 
-const state = ref<Data>([]);
-
 async function fetchData(): Promise<void> {
-  state.value = [];
-  const totalVolume = await getAmmAssetVolume(['ethereum'], ['all'], ['all']);
-  state.value = totalVolume;
+  // data.value = [];
+  for (let i = 0; i < inputs.length; i++) {
+    const input = inputs[i];
+    data.value[0] = await input.fetchFunc(input.chains, input.protocols, input.assets);
+  }
   isLoading.value = false;
 }
 
