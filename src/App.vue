@@ -1,32 +1,12 @@
 <template>
   <div class="app">
-    <router-view
-      class="view"
-      :class="{ full: !isSidebarShown }"
-    />
+    <router-view class="view" />
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, computed } from 'vue';
-import { useRoute } from 'vue-router';
 import '@fontsource/sarabun/400.css';
 import '@fontsource/sarabun/700.css';
-
-export default defineComponent({
-  setup() {
-    const route = useRoute();
-
-    const isSidebarShown = computed(() => {
-      const routeName = route.name;
-      return routeName !== 'login';
-    });
-
-    return {
-      isSidebarShown,
-    };
-  },
-});
 </script>
 
 <style>
@@ -77,18 +57,11 @@ a {
 }
 
 .view {
-  width: calc(100vw - 288px - 64px);
-  margin: 0 32px;
-}
-
-.view.full {
-  width: 100vw;
-  margin: 0;
+  margin: 32px;
 }
 
 @media (max-width: 1024px) {
   .view {
-    width: calc(100vw - 32px);
     margin: 64px 16px 0 16px;
   }
 }
