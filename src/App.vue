@@ -57,6 +57,7 @@ a {
 }
 
 .view {
+  width: 100%;
   margin: 32px;
 }
 
