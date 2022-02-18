@@ -22,6 +22,7 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue';
+import { useRoute } from 'vue-router';
 
 import Chart from '@/components/Chart.vue';
 import LoadingIndicator from '@/components/LoadingIndicator.vue';
@@ -29,6 +30,8 @@ import { Dataset } from '@/router';
 import { Data, getAmmAssetVolume } from '@/utils/api';
 import { getChartType, getChartData, getChartTimestamps } from '@/utils/chart';
 import { Selector, getAmmAssetVolumeSelectors } from '@/utils/selector';
+
+const route = useRoute();
 
 const isLoading = ref(true);
 
@@ -44,7 +47,7 @@ interface Input {
 const inputs: Input[] = [{
   dataset: 'volume',
   chains: ['ethereum'],
-  protocols: ['all'],
+  protocols: [route.params.protocol as string],
   assets: ['all'],
   selectorFunc: getAmmAssetVolumeSelectors,
   fetchFunc: getAmmAssetVolume,
@@ -64,10 +67,9 @@ const charts = computed(() => {
 });
 
 async function fetchData(): Promise<void> {
-  // data.value = [];
   for (let i = 0; i < inputs.length; i++) {
     const input = inputs[i];
-    data.value[0] = await input.fetchFunc(input.chains, input.protocols, input.assets);
+    data.value[i] = await input.fetchFunc(input.chains, input.protocols, input.assets);
   }
   isLoading.value = false;
 }
