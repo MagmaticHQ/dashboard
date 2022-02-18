@@ -83,7 +83,7 @@ import Overview from '@/components/Overview.vue';
 import Select from '@/components/Select.vue';
 import { MetricRouteParams } from '@/router';
 import { getTotal } from '@/utils/aggregation';
-import { Data, getData } from '@/utils/api';
+import { Data } from '@/utils/api';
 import { getChartType, getChartData, getChartTimestamps } from '@/utils/chart';
 import { getPeriod } from '@/utils/dates';
 import { getSelectors } from '@/utils/selector';

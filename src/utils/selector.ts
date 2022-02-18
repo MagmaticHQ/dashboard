@@ -17,9 +17,44 @@ interface SelectorOption {
   text: string;
 }
 
+export function getAmmAssetVolumeSelectors(
+  chain: string,
+  protocol: string,
+  asset: string,
+): Selector[] {
+  const selectorType = getSelectorType('amm', 'volume', 'asset');
+  const configSelectors = config.selectors['amm'][selectorType];
+  const datasetSelectors = Object.keys(configSelectors).map((id) => {
+    const optionList = configSelectors[id];
+    const options = optionList.map((value: string) => {
+      const text = config.names[value];
+      return {
+        value,
+        text,
+      };
+    });
+    const selected = id === 'protocols' ? protocol : asset;
+    return {
+      id,
+      label: getCategoryLabel(id),
+      selected,
+      options,
+    };
+  });
+  const chainSelector = {
+    id: 'chain',
+    label: 'Network',
+    selected: chain,
+    options: [
+      { value: 'ethereum', text: 'Ethereum' },
+      { value: 'polygon', text: 'Polygon' },
+    ],
+  };
+  const selectors = [chainSelector, ...datasetSelectors];
+  return selectors;
+}
+
 export function getSelectors(routeParams: MetricRouteParams): Selector[] {
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-ignore
   const { category, dataset, type } = routeParams;
   const selectorType = getSelectorType(category, dataset, type);
   const configSelectors = config.selectors[category][selectorType];
@@ -89,8 +124,8 @@ function getSelectorType(category: string, dataset: string, type: string) {
 
 function getCategoryLabel(categoryId: string): string {
   const labelMap: Record<string, string> = {
-    protocols: 'Protocol',
-    assets: 'Asset',
+    protocol: 'Protocol',
+    asset: 'Asset',
     pairs: 'Pair',
   };
   return labelMap[categoryId];

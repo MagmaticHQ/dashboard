@@ -1,11 +1,4 @@
-import {
-  Period,
-  getTimestampsFromPeriod,
-  getResolutionByPeriod,
-} from './dates';
-import { Selector, ALL, getChain, getGroup } from './selector';
-
-import { MetricRouteParams } from '@/router';
+import { getTimestampsFromPeriod, getPeriod } from './dates';
 
 interface DataRow {
   chain: string;
@@ -16,12 +9,48 @@ interface DataRow {
 }
 export type Data = DataRow[];
 
-export async function getData(
-  routeParams: MetricRouteParams,
-  selectors: Selector[],
-  period: Period,
+async function getAmmAssetVolume(
+  chains: string[],
+  protocols: string[],
+  assets: string[],
 ): Promise<Data> {
-  const url = getUrl(routeParams, selectors, period);
+  return await fetchData('amm/volume/asset', chains, protocols, assets);
+}
+
+async function getAmmLiquidity(
+  chains: string[],
+  protocols: string[],
+  assets: string[],
+): Promise<Data> {
+  return await fetchData('amm/liquidity/asset', chains, protocols, assets);
+}
+
+async function getAmmFees(
+  chains: string[],
+  protocols: string[],
+  assets: string[],
+): Promise<Data> {
+  return await fetchData('amm/fees/pair', chains, protocols, assets);
+}
+
+async function fetchData(
+  endpoint: string,
+  chains: string[],
+  protocols: string[],
+  assets: string[],
+) {
+  const baseUrl = 'https://api.magmatic.xyz/v1';
+  const { start, end } = getTimestampsFromPeriod(getPeriod(30));
+  const params = {
+    chains: chains.join(','),
+    protocols: protocols.join(','),
+    assets: assets.join(','),
+    start: start.toString(),
+    end: end.toString(),
+    resolution: '1d',
+  };
+  const url = new URL(`${baseUrl}/${endpoint}`);
+  url.search = new URLSearchParams(params).toString();
   const response = await fetch(url.toString(), {
     headers: {
       Authorization: 'Bearer 8RuQjvvcqhuwqgYQn87C1NGg',
@@ -31,39 +60,4 @@ export async function getData(
   return data;
 }
 
-function getUrl(
-  routeParams: MetricRouteParams,
-  selectors: Selector[],
-  period: Period,
-): URL {
-  const group = getGroup(selectors);
-  const chains = getChain(selectors);
-  const resolution = getResolutionByPeriod(period);
-  const { start, end } = getTimestampsFromPeriod(period);
-  const params: any = {
-    chains,
-    start,
-    end,
-    resolution,
-  };
-  const categoryParams = selectors.map((selector) => {
-    const paramOptions =
-      selector.id === group && selector.selected === ALL
-        ? selector.options.map((option) => option.value)
-        : [selector.selected];
-    return {
-      key: selector.id,
-      value: paramOptions.join(','),
-    };
-  });
-  for (const param of categoryParams) {
-    params[param.key] = param.value;
-  }
-  const apiEndpoint = (import.meta as any).env.PROD
-    ? 'https://api.magmatic.xyz'
-    : 'http://localhost:3000';
-  const { category, type, dataset } = routeParams;
-  const url = new URL(`${apiEndpoint}/v1/${category}/${dataset}/${type}`);
-  url.search = new URLSearchParams(params).toString();
-  return url;
-}
+export { getAmmAssetVolume, getAmmLiquidity, getAmmFees };

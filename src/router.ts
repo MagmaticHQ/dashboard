@@ -1,7 +1,6 @@
 import { createWebHistory, createRouter } from 'vue-router';
 
-import Login from './pages/Login.vue';
-import Metrics from './pages/Metrics.vue';
+import Dashboard from './pages/Dashboard.vue';
 
 export type Dataset =
   | 'volume'
@@ -24,26 +23,8 @@ export const router = createRouter({
     {
       path: '/',
       name: 'home',
-      redirect: {
-        name: 'metrics',
-        params: {
-          category: 'amm',
-          dataset: 'volume',
-          type: 'asset',
-        },
-      },
+      redirect: { name: 'dashboard', params: { protocol: 'uniswap' } },
     },
-    { path: '/login', name: 'login', component: Login },
-    {
-      path: '/metrics/:category/:dataset/:type?',
-      name: 'metrics',
-      component: Metrics,
-    },
-    {
-      path: '/data/:pathMatch(.*)*',
-      redirect: {
-        name: 'home',
-      },
-    },
+    { path: '/:protocol', name: 'dashboard', component: Dashboard },
   ],
 });

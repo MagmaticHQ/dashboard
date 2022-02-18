@@ -3,7 +3,7 @@
   "selectors": {
     "amm": {
       "asset": {
-        "protocols": [
+        "protocol": [
           "all",
           "uniswap:3",
           "uniswap:2",
@@ -12,7 +12,7 @@
           "balancer:1",
           "balancer:2"
         ],
-        "assets": [
+        "asset": [
           "all",
           "eth",
           "dai",
@@ -33,7 +33,7 @@
         ]
       },
       "pair": {
-        "protocols": [
+        "protocol": [
           "all",
           "uniswap:3",
           "uniswap:2",
@@ -42,7 +42,7 @@
           "balancer:1",
           "balancer:2"
         ],
-        "pairs": [
+        "pair": [
           "all",
           "dai-weth",
           "usdc-weth",
@@ -62,8 +62,8 @@
     },
     "lending": {
       "asset": {
-        "protocols": ["all", "aave:2", "compound:2", "cream:1"],
-        "assets": [
+        "protocol": ["all", "aave:2", "compound:2", "cream:1"],
+        "asset": [
           "all",
           "eth",
           "dai",

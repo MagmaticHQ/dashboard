@@ -78,7 +78,7 @@ function getSeriesDatasets(
   selectors: Selector[],
   group: string,
 ): Dataset[] {
-  const keyList = getDatasetKeyList(selectors, group);
+  const keyList = getDatasetKeyList(selectors, data);
   const datasets = keyList.map((keys) => getDataset(data, keys));
   const othersDataset = getOthersDataset(
     dataset,
@@ -113,27 +113,13 @@ function getSeriesIds(selectors: Selector[], group: string): string[] {
   return ids;
 }
 
-function getDatasetKeyList(selectors: Selector[], group: string): string[][] {
-  if (!group) {
-    return [selectors.map((selector) => selector.selected)];
-  }
-  const activeSelector = selectors.find((selector) => selector.id === group);
-  if (!activeSelector) {
-    return [];
-  }
-  if (activeSelector.selected !== ALL) {
-    return [selectors.map((selector) => selector.selected)];
-  }
-  const activeSelectorOptions = activeSelector.options.filter(
-    (option) => option.value !== ALL,
-  );
-  const keyList = activeSelectorOptions.map((option) => {
-    const keys = selectors.map((selector) =>
-      selector.id === group ? option.value : selector.selected,
-    );
-    return keys;
+function getDatasetKeyList(selectors: Selector[], data: Data): string[][] {
+  return data.map((row) => {
+    return selectors.map((selector) => {
+      const { id } = selector;
+      return row[id];
+    });
   });
-  return keyList;
 }
 
 function getDataset(data: Data, keys: string[]): Dataset {

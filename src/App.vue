@@ -1,7 +1,5 @@
 <template>
   <div class="app">
-    <Sidebar v-if="isSidebarShown" />
-    <Feedback />
     <router-view
       class="view"
       :class="{ full: !isSidebarShown }"
@@ -15,15 +13,7 @@ import { useRoute } from 'vue-router';
 import '@fontsource/sarabun/400.css';
 import '@fontsource/sarabun/700.css';
 
-import Feedback from '@/components/Feedback.vue';
-import Sidebar from '@/components/Sidebar.vue';
-
 export default defineComponent({
-  components: {
-    Feedback,
-    Sidebar,
-  },
-
   setup() {
     const route = useRoute();
 
