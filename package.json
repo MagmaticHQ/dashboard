@@ -9,7 +9,7 @@
   },
   "scripts": {
     "build": "vite build",
-    "serve": "vite",
+    "dev": "vite",
     "lint": "npm run eslint && npm run stylelint",
     "eslint": "eslint \"src/**/*.{js,ts,vue}\"",
     "stylelint": "stylelint \"src/**/*.vue\""
