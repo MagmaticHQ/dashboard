@@ -73,10 +73,10 @@ const protocolAssets = {
 
 const protocolPairs = {
   'curve': ['usdc-dai', 'usdt-dai', 'usdt-usdc', 'weth-seth', 'sbtc-wbtc'],
-  'balancer': ['wbtc-weth', 'usdc-dai', 'usdt-dai', 'usdt-usdc', 'weth-dai', 'bal-weth'],
-  'uniswap': ['usdc-dai', 'usdc-weth', 'wbtc-weth', 'usdt-usdc', 'weth-usdt', 'wbtc-usdc'],
-  'quickswap': ['wbtc-weth', 'usdc-weth', 'usdc-mimatic', 'weth-usdt', 'usdt-usdc', 'weth-dai'],
-  'sushiswap': ['usdc-weth', 'wbtc-weth', 'weth-usdt', 'dai-weth', 'sushi-weth', 'aave-weth'],
+  'balancer': ['wbtc-weth', 'usdc-dai', 'usdt-dai', 'usdt-usdc', 'dai-weth', 'bal-weth'],
+  'uniswap': ['usdc-dai', 'usdc-weth', 'wbtc-weth', 'usdt-usdc', 'usdt-weth', 'wbtc-usdc'],
+  'quickswap': ['wbtc-weth', 'usdc-weth', 'usdc-mimatic', 'usdt-weth', 'usdt-usdc', 'dai-weth'],
+  'sushiswap': ['usdc-weth', 'wbtc-weth', 'usdt-weth', 'dai-weth', 'sushi-weth', 'aave-weth'],
 };
 
 const inputs: Input[] = [{
