@@ -47,6 +47,8 @@ interface Input {
   chains: string[];
   protocols: string[];
   assets: string[];
+  group: string;
+  ids: string[];
   selectorFunc: (chains: string, protocols: string, assets: string) => Selector[];
   fetchFunc: (chains: string[], protocols: string[], assets: string[]) => Promise<Data>;
 }
@@ -62,19 +64,19 @@ const protocolNames = {
 const protocolName = protocolNames[protocol];
 
 const protocolAssets = {
-  'curve': ['dai', 'usdc', 'usdt', 'eth', 'seth', 'wbtc', 'sbtc'],
-  'balancer': ['eth', 'wbtc', 'dai', 'usdc', 'usdt', 'bal'],
-  'uniswap': ['eth', 'usdc', 'dai', 'usdt', 'wbtc'],
-  'quickswap': ['eth', 'usdc', 'dai', 'usdt', 'wbtc'],
-  'sushiswap': ['eth', 'usdc', 'dai', 'usdt', 'wbtc'],
+  'curve': ['dai', 'usdc', 'usdt', 'weth', 'seth', 'wbtc', 'sbtc'],
+  'balancer': ['weth', 'wbtc', 'dai', 'usdc', 'usdt', 'bal'],
+  'uniswap': ['weth', 'usdc', 'dai', 'usdt', 'wbtc'],
+  'quickswap': ['weth', 'usdc', 'dai', 'usdt', 'wbtc'],
+  'sushiswap': ['weth', 'usdc', 'dai', 'usdt', 'wbtc'],
 };
 
 const protocolPairs = {
-  'curve': ['dai-usdc', 'dai-usdt', 'usdc-usdt', 'eth-seth', 'wbtc-sbtc'],
-  'balancer': ['wbtc-eth', 'dai-usdc', 'dai-usdt', 'usdc-usdt', 'eth-dai', 'bal-eth'],
-  'uniswap': ['dai-usdc', 'usdc-eth', 'wbtc-eth', 'usdc-usdt', 'eth-usdt', 'wbtc-usdc'],
-  'quickswap': ['wbtc-eth', 'usdc-eth', 'usdc-mimatic', 'weth-usdt', 'usdc-usdt', 'weth-dai'],
-  'sushiswap': ['usdc-eth', 'wbtc-eth', 'eth-usdt', 'dai-eth', 'sushi-eth', 'aave-eth'],
+  'curve': ['usdc-dai', 'usdt-dai', 'usdt-usdc', 'weth-seth', 'sbtc-wbtc'],
+  'balancer': ['wbtc-weth', 'usdc-dai', 'usdt-dai', 'usdt-usdc', 'weth-dai', 'bal-weth'],
+  'uniswap': ['usdc-dai', 'usdc-weth', 'wbtc-weth', 'usdt-usdc', 'weth-usdt', 'wbtc-usdc'],
+  'quickswap': ['wbtc-weth', 'usdc-weth', 'usdc-mimatic', 'weth-usdt', 'usdt-usdc', 'weth-dai'],
+  'sushiswap': ['usdc-weth', 'wbtc-weth', 'weth-usdt', 'dai-weth', 'sushi-weth', 'aave-weth'],
 };
 
 const inputs: Input[] = [{
@@ -83,6 +85,8 @@ const inputs: Input[] = [{
   chains: ['ethereum'],
   protocols: [protocol],
   assets: ['all'],
+  group: 'protocol',
+  ids: [protocol],
   selectorFunc: getAmmAssetVolumeSelectors,
   fetchFunc: getAmmAssetVolume,
 }, {
@@ -91,6 +95,8 @@ const inputs: Input[] = [{
   chains: ['ethereum'],
   protocols: [protocol],
   assets: ['all'],
+  group: 'protocol',
+  ids: [protocol],
   selectorFunc: getAmmLiquiditySelectors,
   fetchFunc: getAmmLiquidity,
 }, {
@@ -99,6 +105,8 @@ const inputs: Input[] = [{
   chains: ['ethereum', 'polygon'],
   protocols: [protocol],
   assets: ['all'],
+  group: 'chain',
+  ids: ['ethereum', 'polygon'],
   selectorFunc: getAmmAssetVolumeSelectors,
   fetchFunc: getAmmAssetVolume,
 }, {
@@ -107,6 +115,8 @@ const inputs: Input[] = [{
   chains: ['ethereum'],
   protocols: [protocol],
   assets: protocolPairs[protocol],
+  group: 'pair',
+  ids: protocolPairs[protocol],
   selectorFunc: getAmmPairVolumeSelectors,
   fetchFunc: getAmmPairVolume,
 }, {
@@ -115,6 +125,8 @@ const inputs: Input[] = [{
   chains: ['ethereum'],
   protocols: [protocol],
   assets: ['all'],
+  group: 'pair',
+  ids: [protocol],
   selectorFunc: getAmmFeeSelectors,
   fetchFunc: getAmmFees,
 }, {
@@ -123,6 +135,8 @@ const inputs: Input[] = [{
   chains: ['ethereum'],
   protocols: [protocol],
   assets: protocolAssets[protocol],
+  group: 'asset',
+  ids: protocolAssets[protocol],
   selectorFunc: getAmmLiquiditySelectors,
   fetchFunc: getAmmLiquidity,
 }];
@@ -132,20 +146,23 @@ const data = ref<Data[]>(inputs.map(() => []));
 const charts = computed(() => {
   return data.value.map((row, index) => {
     const input = inputs[index];
+    const selectors = input.selectorFunc(input.chains[0], input.protocols[0], input.assets[0]);
     return {
       title: input.title,
       type: getChartType(input.dataset),
-      timestamps: getChartTimestamps(input.dataset, row, input.selectorFunc(input.chains[0], input.protocols[0], input.assets[0])),
-      data: getChartData(input.dataset, row, input.selectorFunc(input[0], input[1], input[2])),
+      timestamps: getChartTimestamps(row, selectors),
+      data: getChartData(row, selectors, input.group, input.ids),
     };
   });
 });
 
 async function fetchData(): Promise<void> {
+  const results: Data[] = [];
   for (let i = 0; i < inputs.length; i++) {
     const input = inputs[i];
-    data.value[i] = await input.fetchFunc(input.chains, input.protocols, input.assets);
+    results[i] = await input.fetchFunc(input.chains, input.protocols, input.assets);
   }
+  data.value = results;
   isLoading.value = false;
 }
 

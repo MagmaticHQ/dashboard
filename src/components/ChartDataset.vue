@@ -140,16 +140,6 @@ export default defineComponent({
       return valueFormat.format(value);
     }
 
-    function formatDate(timestamp: number) {
-      const options = {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric',
-      } as Intl.DateTimeFormatOptions;
-      const date = new Date(timestamp);
-      return date.toLocaleString('en-US', options);
-    }
-
     function getName(id: string): string {
       return config.names[id];
     }

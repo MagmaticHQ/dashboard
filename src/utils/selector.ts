@@ -68,7 +68,8 @@ function getDataSelectors(
         text,
       };
     });
-    const selected = id === 'protocols' ? protocol : asset;
+    const selected =
+      id === 'chain' ? chain : id === 'protocol' ? protocol : asset;
     return {
       id,
       label: getCategoryLabel(id),
@@ -159,9 +160,10 @@ function getSelectorType(category: string, dataset: Dataset, type: string) {
 
 function getCategoryLabel(categoryId: string): string {
   const labelMap: Record<string, string> = {
+    chain: 'Chain',
     protocol: 'Protocol',
     asset: 'Asset',
-    pairs: 'Pair',
+    pair: 'Pair',
   };
   return labelMap[categoryId];
 }

@@ -85,6 +85,9 @@
     }
   },
   "names": {
+    "ethereum": "Ethereum",
+    "polygon": "Polygon",
+
     "uniswap:3": "Uniswap V3",
     "uniswap:2": "Uniswap V2",
     "curve:1": "Curve V1",
@@ -140,6 +143,9 @@
     "_others": "Others"
   },
   "colors": {
+    "ethereum": "#787d9e",
+    "polygon": "#8248e5",
+
     "uniswap:2": "#ffb2d7",
     "uniswap:3": "#ff66af",
     "curve:1": "#a5b7ce",
@@ -183,6 +189,7 @@
     "renbtc-weth": "#87888c",
     "tbtc-weth": "#080503",
     "renbtc-wbtc": "#87888c",
+    "sbtc-wbtc": "#87888c",
     "yfi-weth": "#0073f9",
     "aave-weth": "#b6509e",
     "comp-weth": "#00d395",
