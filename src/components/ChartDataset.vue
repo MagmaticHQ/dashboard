@@ -97,59 +97,7 @@ export default defineComponent({
           max: isRelative.value ? 1 : undefined,
         },
         tooltip: {
-          custom: function ({ series, dataPointIndex, w }: any): string {
-            const seriesMetadata = w.config.series;
-            const colors = w.config.colors;
-            const seriesCount = series.length;
-            const tooltipItemTemplates = [];
-            for (let i = 0; i < seriesCount; i++) {
-              const label = isRelative.value
-                ? formatShare(series[i][dataPointIndex])
-                : formatValue(series[i][dataPointIndex]);
-              const color = colors[i];
-              const title = seriesMetadata[i].name;
-
-              const template = `
-                <div class="tooltip-item">
-                    <div class="tooltip-item-title">
-                      <div class="tooltip-item-logo" style="background: ${color}"></div>
-                      ${title}
-                  </div>
-                  <div class="tooltip-item-label">
-                    ${label}
-                  </div>
-                </div>
-              `;
-              tooltipItemTemplates.push(template);
-            }
-            const tooltipItemTemplate = tooltipItemTemplates.join('\n');
-
-            const { categories } = w.globals.lastXAxis;
-            const timestamp = categories[dataPointIndex];
-            const date = formatDate(timestamp);
-
-            const totalValue = series.reduce((acc: number, val: any) => {
-              return acc + val[dataPointIndex];
-            }, 0);
-            const totalLabel = isRelative.value
-              ? formatShare(totalValue)
-              : formatValue(totalValue);
-
-            const template = `
-              <div class="tooltip-header">
-                ${date}
-              </div>
-              <div class="tooltip-body">
-                <div>
-                  ${tooltipItemTemplate}
-                </div>
-                <div class="tooltip-total">
-                  Total: ${totalLabel}
-                </div>
-              </div>
-            `;
-            return template;
-          },
+          enabled: false,
         },
         legend: {
           onItemHover: {
