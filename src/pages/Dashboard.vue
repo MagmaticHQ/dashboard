@@ -46,6 +46,30 @@ interface Input {
   fetchFunc: (chains: string[], protocols: string[], assets: string[]) => Promise<Data>;
 }
 
+const protocolNames = {
+  'curve': 'Curve',
+  'balancer': 'Balancer',
+  'uniswap': 'Uniswap',
+  'quickswap': 'Quickswap',
+  'sushiswap': 'Sushiswap',
+};
+
+const protocolAssets = {
+  'curve': ['dai', 'usdc', 'usdt', 'eth', 'seth', 'wbtc', 'sbtc'],
+  'balancer': ['eth', 'wbtc', 'dai', 'usdc', 'usdt', 'bal'],
+  'uniswap': ['eth', 'usdc', 'dai', 'usdt', 'wbtc'],
+  'quickswap': ['eth', 'usdc', 'dai', 'usdt', 'wbtc'],
+  'sushiswap': ['eth', 'usdc', 'dai', 'usdt', 'wbtc'],
+};
+
+const protocolPairs = {
+  'curve': ['dai-usdc', 'dai-usdt', 'usdc-usdt', 'eth-seth', 'wbtc-sbtc'],
+  'balancer': ['wbtc-eth', 'dai-usdc', 'dai-usdt', 'usdc-usdt', 'eth-dai', 'bal-eth'],
+  'uniswap': ['dai-usdc', 'usdc-eth', 'wbtc-eth', 'usdc-usdt', 'eth-usdt', 'wbtc-usdc'],
+  'quickswap': ['wbtc-eth', 'usdc-eth', 'usdc-mimatic', 'weth-usdt', 'usdc-usdt', 'weth-dai'],
+  'sushiswap': ['usdc-eth', 'wbtc-eth', 'eth-usdt', 'dai-eth', 'sushi-eth', 'aave-eth'],
+};
+
 const inputs: Input[] = [{
   dataset: 'volume',
   chains: ['ethereum'],
@@ -71,7 +95,7 @@ const inputs: Input[] = [{
   dataset: 'volume',
   chains: ['ethereum'],
   protocols: [protocol],
-  assets: ['dai-usdc', 'dai-usdt', 'usdc-usdt', 'eth-seth', 'wbtc-sbtc'],
+  assets: protocolPairs[protocol],
   selectorFunc: getAmmPairVolumeSelectors,
   fetchFunc: getAmmPairVolume,
 }, {
@@ -85,7 +109,7 @@ const inputs: Input[] = [{
   dataset: 'liquidity',
   chains: ['ethereum'],
   protocols: [protocol],
-  assets: ['dai', 'usdc', 'usdt', 'eth', 'seth', 'wbtc', 'sbtc'],
+  assets: protocolAssets[protocol],
   selectorFunc: getAmmLiquiditySelectors,
   fetchFunc: getAmmLiquidity,
 }];
