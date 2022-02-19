@@ -1,21 +1,24 @@
 <template>
-  <div class="list">
-    <div
-      v-for="(chart, index) in charts"
-      :key="index"
-      class="chart"
-    >
-      <LoadingIndicator
-        v-if="isLoading"
-        class="loader"
-      />
-      <ChartDataset
-        v-else
-        :type="chart.type"
-        :is-relative="false"
-        :timestamps="chart.timestamps"
-        :data="chart.data"
-      />
+  <div class="page">
+    <h1>{{ protocolName }}</h1>
+    <div class="list">
+      <div
+        v-for="(chart, index) in charts"
+        :key="index"
+        class="chart"
+      >
+        <LoadingIndicator
+          v-if="isLoading"
+          class="loader"
+        />
+        <ChartDataset
+          v-else
+          :type="chart.type"
+          :is-relative="false"
+          :timestamps="chart.timestamps"
+          :data="chart.data"
+        />
+      </div>
     </div>
   </div>
 </template>
@@ -53,6 +56,8 @@ const protocolNames = {
   'quickswap': 'Quickswap',
   'sushiswap': 'Sushiswap',
 };
+
+const protocolName = protocolNames[protocol];
 
 const protocolAssets = {
   'curve': ['dai', 'usdc', 'usdt', 'eth', 'seth', 'wbtc', 'sbtc'],
@@ -141,6 +146,11 @@ onMounted(() => {
 </script>
 
 <style scoped>
+.page {
+  display: flex;
+  flex-direction: column;
+}
+
 .list {
   display: flex;
   flex-direction: row;
