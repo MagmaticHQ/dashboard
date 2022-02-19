@@ -13,6 +13,7 @@
         />
         <ChartDataset
           v-else
+          :title="chart.title"
           :type="chart.type"
           :is-relative="false"
           :timestamps="chart.timestamps"
@@ -41,6 +42,7 @@ const protocol = route.params.protocol as string;
 const isLoading = ref(true);
 
 interface Input {
+  title: string;
   dataset: Dataset;
   chains: string[];
   protocols: string[];
@@ -76,6 +78,7 @@ const protocolPairs = {
 };
 
 const inputs: Input[] = [{
+  title: 'Total volume',
   dataset: 'volume',
   chains: ['ethereum'],
   protocols: [protocol],
@@ -83,6 +86,7 @@ const inputs: Input[] = [{
   selectorFunc: getAmmAssetVolumeSelectors,
   fetchFunc: getAmmAssetVolume,
 }, {
+  title: 'Liquidity (TVL)',
   dataset: 'liquidity',
   chains: ['ethereum'],
   protocols: [protocol],
@@ -90,6 +94,7 @@ const inputs: Input[] = [{
   selectorFunc: getAmmLiquiditySelectors,
   fetchFunc: getAmmLiquidity,
 }, {
+  title: 'Volume, by network',
   dataset: 'volume',
   chains: ['ethereum', 'polygon'],
   protocols: [protocol],
@@ -97,6 +102,7 @@ const inputs: Input[] = [{
   selectorFunc: getAmmAssetVolumeSelectors,
   fetchFunc: getAmmAssetVolume,
 }, {
+  title: 'Volume, by pair',
   dataset: 'volume',
   chains: ['ethereum'],
   protocols: [protocol],
@@ -104,6 +110,7 @@ const inputs: Input[] = [{
   selectorFunc: getAmmPairVolumeSelectors,
   fetchFunc: getAmmPairVolume,
 }, {
+  title: 'Swap fees',
   dataset: 'fees',
   chains: ['ethereum'],
   protocols: [protocol],
@@ -111,6 +118,7 @@ const inputs: Input[] = [{
   selectorFunc: getAmmFeeSelectors,
   fetchFunc: getAmmFees,
 }, {
+  title: 'Liquidity, by asset',
   dataset: 'liquidity',
   chains: ['ethereum'],
   protocols: [protocol],
@@ -125,6 +133,7 @@ const charts = computed(() => {
   return data.value.map((row, index) => {
     const input = inputs[index];
     return {
+      title: input.title,
       type: getChartType(input.dataset),
       timestamps: getChartTimestamps(input.dataset, row, input.selectorFunc(input.chains[0], input.protocols[0], input.assets[0])),
       data: getChartData(input.dataset, row, input.selectorFunc(input[0], input[1], input[2])),

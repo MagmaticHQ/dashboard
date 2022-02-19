@@ -42,6 +42,10 @@ h1 {
   font-size: var(--text-header);
 }
 
+h2 {
+  font-size: var(--text-large);
+}
+
 h4 {
   margin: 0;
   font-weight: normal;

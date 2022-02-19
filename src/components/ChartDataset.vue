@@ -1,11 +1,16 @@
 <template>
-  <ApexChart
-    width="100%"
-    height="100%"
-    :type="type"
-    :options="options"
-    :series="series"
-  />
+  <div>
+    <h2>{{ title }}</h2>
+    <div class="chart">
+      <ApexChart
+        width="100%"
+        height="100%"
+        :type="type"
+        :options="options"
+        :series="series"
+      />
+    </div>
+  </div>
 </template>
 
 <script lang="ts">
@@ -20,6 +25,10 @@ export default defineComponent({
     ApexChart,
   },
   props: {
+    title: {
+      type: String,
+      required: true,
+    },
     type: {
       type: String as PropType<ChartType>,
       default: 'bar',
@@ -211,6 +220,16 @@ export default defineComponent({
   },
 });
 </script>
+
+<style scoped>
+.chart {
+  height: 240px;
+}
+
+h2 {
+  margin: 8px;
+}
+</style>
 
 <style>
 .apexcharts-text tspan,
