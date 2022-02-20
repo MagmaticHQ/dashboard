@@ -199,7 +199,7 @@ onMounted(() => {
 }
 
 .chart {
-  width: 100%;
+  width: 40%;
   max-width: 580px;
   height: 300px;
   margin-top: 16px;
@@ -207,6 +207,18 @@ onMounted(() => {
   border: 1px solid var(--border);
   border-radius: var(--border-radius);
   background: var(--background-secondary);
+}
+
+@media (max-width: 1024px) {
+  .chart {
+    width: 80%;
+  }
+}
+
+@media (max-width: 768px) {
+  .chart {
+    width: 100%;
+  }
 }
 
 .loader {
