@@ -25,6 +25,7 @@
 </template>
 
 <script setup lang="ts">
+import { useTitle } from '@vueuse/core';
 import { ref, computed, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
 
@@ -86,6 +87,9 @@ const protocolPairs = {
   'quickswap': ['wbtc-weth', 'usdc-weth', 'usdc-mimatic', 'usdt-weth', 'usdt-usdc', 'dai-weth'],
   'sushiswap': ['usdc-weth', 'wbtc-weth', 'usdt-weth', 'dai-weth', 'sushi-weth', 'aave-weth'],
 };
+
+const title = useTitle();
+title.value = `${protocolName} Metrics | Magmatic`;
 
 const chains = ['ethereum', 'polygon'];
 
