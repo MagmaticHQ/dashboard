@@ -1,11 +1,11 @@
 {
-  "name": "magmatic-app",
+  "name": "magmatic-dashboard",
   "version": "1.0.0",
-  "description": "Magmatic App",
+  "description": "Magmatic Dashboard",
   "license": "UNLICENSED",
   "repository": {
     "type": "git",
-    "url": "git://github.com/MagmaticHQ/app.git"
+    "url": "git://github.com/MagmaticHQ/dashboard.git"
   },
   "scripts": {
     "build": "vite build",
