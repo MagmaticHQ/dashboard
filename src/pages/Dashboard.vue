@@ -63,6 +63,14 @@ const protocolNames = {
 
 const protocolName = protocolNames[protocol];
 
+const protocolVersions = {
+  'curve': ['curve:1', 'curve:2'],
+  'balancer': ['balancer:1', 'balancer:2'],
+  'uniswap': ['uniswap:1', 'uniswap:2', 'uniswap:3'],
+  'quickswap': ['quickswap:1'],
+  'sushiswap': ['sushiswap:1'],
+};
+
 const protocolAssets = {
   'curve': ['dai', 'usdc', 'usdt', 'weth', 'seth', 'wbtc', 'sbtc'],
   'balancer': ['weth', 'wbtc', 'dai', 'usdc', 'usdt', 'bal'],
@@ -79,31 +87,33 @@ const protocolPairs = {
   'sushiswap': ['usdc-weth', 'wbtc-weth', 'usdt-weth', 'dai-weth', 'sushi-weth', 'aave-weth'],
 };
 
+const chains = ['ethereum', 'polygon'];
+
 const inputs: Input[] = [{
   title: 'Total volume',
   dataset: 'volume',
-  chains: ['ethereum'],
-  protocols: [protocol],
+  chains,
+  protocols: protocolVersions[protocol],
   assets: ['all'],
-  group: 'protocol',
+  group: 'all',
   ids: [protocol],
   selectorFunc: getAmmAssetVolumeSelectors,
   fetchFunc: getAmmAssetVolume,
 }, {
   title: 'Liquidity (TVL)',
   dataset: 'liquidity',
-  chains: ['ethereum'],
-  protocols: [protocol],
+  chains,
+  protocols: protocolVersions[protocol],
   assets: ['all'],
-  group: 'protocol',
+  group: 'all',
   ids: [protocol],
   selectorFunc: getAmmLiquiditySelectors,
   fetchFunc: getAmmLiquidity,
 }, {
   title: 'Volume, by network',
   dataset: 'volume',
-  chains: ['ethereum', 'polygon'],
-  protocols: [protocol],
+  chains,
+  protocols: protocolVersions[protocol],
   assets: ['all'],
   group: 'chain',
   ids: ['ethereum', 'polygon'],
@@ -112,8 +122,8 @@ const inputs: Input[] = [{
 }, {
   title: 'Volume, by pair',
   dataset: 'volume',
-  chains: ['ethereum'],
-  protocols: [protocol],
+  chains,
+  protocols: protocolVersions[protocol],
   assets: protocolPairs[protocol],
   group: 'pair',
   ids: protocolPairs[protocol],
@@ -122,8 +132,8 @@ const inputs: Input[] = [{
 }, {
   title: 'Swap fees',
   dataset: 'fees',
-  chains: ['ethereum'],
-  protocols: [protocol],
+  chains,
+  protocols: protocolVersions[protocol],
   assets: ['all'],
   group: 'pair',
   ids: [protocol],
@@ -132,8 +142,8 @@ const inputs: Input[] = [{
 }, {
   title: 'Liquidity, by asset',
   dataset: 'liquidity',
-  chains: ['ethereum'],
-  protocols: [protocol],
+  chains,
+  protocols: protocolVersions[protocol],
   assets: protocolAssets[protocol],
   group: 'asset',
   ids: protocolAssets[protocol],
