@@ -17,6 +17,7 @@
   "dependencies": {
     "@fontsource/sarabun": "^4.5.0",
     "@formatjs/intl-numberformat": "^6.2.5",
+    "@vueuse/core": "^7.6.2",
     "apexcharts": "^3.25.0",
     "vue": "^3.2.31",
     "vue-router": "^4.0.3",
