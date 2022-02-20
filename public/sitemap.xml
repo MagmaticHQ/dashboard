@@ -1,0 +1,20 @@
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>https://dashboard.magmatic.xyz/</loc>
+  </url>
+  <url>
+    <loc>https://dashboard.magmatic.xyz/curve</loc>
+  </url>
+  <url>
+    <loc>https://dashboard.magmatic.xyz/balancer</loc>
+  </url>
+  <url>
+    <loc>https://dashboard.magmatic.xyz/uniswap</loc>
+  </url>
+  <url>
+    <loc>https://dashboard.magmatic.xyz/quickswap</loc>
+  </url>
+  <url>
+    <loc>https://dashboard.magmatic.xyz/sushiswap</loc>
+  </url>
+</urlset>
