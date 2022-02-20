@@ -1,12 +1,13 @@
 import { getTimestampsFromPeriod, getPeriod } from './dates';
 
-interface DataRow {
+export interface DataRow {
   chain: string;
   protocol: string;
   asset: string | undefined;
   pair: string | undefined;
   values: Record<string, number>;
 }
+
 export type Data = DataRow[];
 
 async function getAmmAssetVolume(

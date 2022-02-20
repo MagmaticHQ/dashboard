@@ -1,4 +1,4 @@
-import { Data } from './api';
+import { Data, DataRow } from './api';
 import { Selector } from './selector';
 
 import { Dataset as DatasetType } from '@/router';
@@ -46,13 +46,14 @@ export function getChartTimestamps(
 export function getChartData(
   data: Data,
   selectors: Selector[],
-  group: string,
+  groupBy: string,
   ids: string[],
 ): ChartData[] {
   if (data.length == 0 || !selectors) {
     return [];
   }
-  const datasets = getSeriesDatasets(data, selectors);
+  const groupedData = groupData(data, groupBy);
+  const datasets = getSeriesDatasets(groupedData, selectors);
   if (datasets.findIndex((dataset) => Object.keys(dataset).length === 0) > -1) {
     return [];
   }
@@ -67,6 +68,52 @@ export function getChartData(
     });
   }
   return chartData;
+}
+
+function groupData(data: Data, groupBy: string): Data {
+  function getGroup(row: DataRow, groupBy: string) {
+    if (groupBy === 'all') {
+      return '';
+    }
+    if (groupBy === 'asset') {
+      return row.asset;
+    }
+    if (groupBy === 'pair') {
+      return row.pair;
+    }
+    if (groupBy === 'protocol') {
+      return row.protocol;
+    }
+    if (groupBy === 'chain') {
+      return row.chain;
+    }
+    return '';
+  }
+
+  const allGroups = data.map((row) => getGroup(row, groupBy));
+  const groups = [...new Set(allGroups)];
+  const groupedDatasets = groups.map((group) => {
+    return data.reduce((groupedRow, row) => {
+      const rowGroup = getGroup(row, groupBy);
+      if (group !== rowGroup) {
+        return groupedRow;
+      }
+      if (Object.keys(groupedRow).length === 0) {
+        return row;
+      }
+      return {
+        ...row,
+        values: Object.fromEntries(
+          Object.entries(row.values).map((entry) => {
+            const [timestamp, value] = entry;
+            const sum = value + (groupedRow as any).values[timestamp];
+            return [timestamp, sum];
+          }),
+        ),
+      };
+    }, {});
+  });
+  return groupedDatasets as any;
 }
 
 function getSeriesDatasets(data: Data, selectors: Selector[]): Dataset[] {
